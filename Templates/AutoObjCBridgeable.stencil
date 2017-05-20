@@ -1,0 +1,46 @@
+import Foundation
+
+// Bridging of structs
+{% for type in types.implementing.AutoObjCBridgeable|struct %}
+
+@objc(XYZ{{type.name}})
+class _ObjC{{type.name}} : NSObject {
+    private (set) var {{type.name|lowerFirstWord}}: {{type.name}}
+
+    // Initializer to be used from Swift code
+    init({{type.name|lowerFirstWord}}: {{type.name}}) {
+        self.{{type.name|lowerFirstWord}} = {{type.name|lowerFirstWord}}
+    }
+
+    {% for variable in type.variables|annotated:"enableBridging" %}
+    var {{variable.name}} :
+    {% endfor %}
+}
+
+{% endfor %}
+
+// Bridging of enums
+{% for enum in types.implementing.AutoObjCBridgeable|enum %}
+{% for case in enum.cases %}
+@objc(XYZ{{enum.name}}{{case.name|upperFirst}})
+class _ObjC{{enum.name}}{{case.name|upperFirst}} : NSObject {
+    {% for associatedValue in case.associatedValues %}
+    {% if associatedValue.type.kind == "struct" or associatedValue.type.kind == "enum" %}
+    let value{{forloop.counter}} : _ObjC{{associatedValue.type.name}}
+    {% else %}
+    let value{{forloop.counter}} : {{associatedValue.typeName}}
+    {% endif %}
+    {% endfor %}
+
+    {% if not case.associatedValues.count == 0 %}
+    init({% for associatedValue in case.associatedValues %}{% if associatedValue.type.kind == "struct" or associatedValue.type.kind == "enum" %}value{{forloop.counter}} : _ObjC{{associatedValue.type.name}}{% else %}value{{forloop.counter}} : {{associatedValue.typeName}} {% endif %}{% if not forloop.last %},{% endif %}{% endfor %})
+    {
+    {% for associatedValue in case.associatedValues %}
+        self.value{{forloop.counter}} = value{{forloop.counter}}
+    {% endfor %}
+    }
+    {% endif %}
+}
+
+{% endfor %}
+{% endfor %}
