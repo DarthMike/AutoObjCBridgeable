@@ -13,7 +13,40 @@ class _ObjC{{type.name}} : NSObject {
     }
 
     {% for variable in type.variables|annotated:"enableBridging" %}
-    var {{variable.name}} :
+    {% if variable.type.kind == "enum" %}
+    // Computed property for enums
+    var {{variable.name}} : Any? {
+        guard let value = self.{{type.name|lowerFirstWord}}.{{variable.name}} else {
+            return nil;
+        }
+
+        switch value {
+            {% for case in variable.type.cases %}
+            {% if case.hasAssociatedValue %}
+            case .{{ case.name }}({%for associatedValue in case.associatedValues %}let value{{forloop.counter}}{% endfor %}):
+                return _ObjC{{variable.type.name}}{{case.name|upperFirst}}({%for associatedValue in case.associatedValues %}value{{forloop.counter}} : value{{forloop.counter}}{%if not forloop.last %},{% endif %}{% endfor%})
+            {% else %} case .{{ case.name }}:
+                return _ObjC{{variable.type.name}}()
+            {% endif %}
+            {% endfor %}
+        }
+    }
+    {% else %}{% if variable.type.kind == "struct" %}
+    var {{variable.name}} : _ObjC{{variable.type.name}}
+    {% endif %}
+
+    // Forwarding property for native types
+    var {{variable.name}} : {{variable.typeName}}
+    {
+        get {
+            return self.{{type.name|lowerFirstWord}}.{{variable.name}}
+        }
+        set {
+            self.{{type.name|lowerFirstWord}}.{{variable.name}} = newValue
+        }
+    }
+    {% endif %}
+
     {% endfor %}
 }
 

@@ -11,24 +11,10 @@ enum CheckoutOption {
     case paypal(String)
 }
 
-struct EmptyStruct : AutoObjCBridgeable {
-    
-}
-
-struct StructWithSwiftProperties : AutoObjCBridgeable {
-    let name: String
-    let count: Int
-    let valid: Bool
-    let someStuff: [String]
-}
-
-enum OtherEnum : AutoObjCBridgeable {
-    case a
-    case b(EmptyStruct)
-}
-
 struct ShoppingCart  {
+    // sourcery:enableBridging
     var checkoutOption: CheckoutOption?
+    // sourcery:enableBridging
     var items: [String]
 
     init(items: [String], checkoutOption: CheckoutOption? = nil) {

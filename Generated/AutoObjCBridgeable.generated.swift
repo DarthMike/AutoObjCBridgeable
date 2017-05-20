@@ -26,6 +26,32 @@ class _ObjCShoppingCart : NSObject {
         self.shoppingCart = shoppingCart
     }
 
+    // Computed property for enums
+    var checkoutOption : Any? {
+        guard let value = self.shoppingCart.checkoutOption else {
+            return nil;
+        }
+
+        switch value {
+            case .creditCard(let value1):
+                return _ObjCCheckoutOptionCreditCard(value1 : value1)
+            case .paypal(let value1):
+                return _ObjCCheckoutOptionPaypal(value1 : value1)
+        }
+    }
+
+
+    // Forwarding property for native types
+    var items : [String]
+    {
+        get {
+            return self.shoppingCart.items
+        }
+        set {
+            self.shoppingCart.items = newValue
+        }
+    }
+
 }
 
 
