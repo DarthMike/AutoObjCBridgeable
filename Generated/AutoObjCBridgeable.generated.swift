@@ -64,6 +64,54 @@ class _ObjCStructWithSwiftProperties : NSObject {
         self.structWithSwiftProperties = structWithSwiftProperties
     }
 
+
+    // Forwarding property for native types
+    var name : String
+    {
+        get {
+            return self.structWithSwiftProperties.name
+        }
+    }
+
+
+    // Forwarding property for native types
+    var count : Int
+    {
+        get {
+            return self.structWithSwiftProperties.count
+        }
+    }
+
+
+    // Forwarding property for native types
+    var valid : Bool
+    {
+        get {
+            return self.structWithSwiftProperties.valid
+        }
+    }
+
+
+    // Forwarding property for native types
+    var mutableValid : Bool
+    {
+        get {
+            return self.structWithSwiftProperties.mutableValid
+        }
+        set {
+            self.structWithSwiftProperties.mutableValid = newValue
+        }
+    }
+
+
+    // Forwarding property for native types
+    var someStuff : [String]
+    {
+        get {
+            return self.structWithSwiftProperties.someStuff
+        }
+    }
+
 }
 
 

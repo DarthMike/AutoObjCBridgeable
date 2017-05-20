@@ -41,9 +41,11 @@ class _ObjC{{type.name}} : NSObject {
         get {
             return self.{{type.name|lowerFirstWord}}.{{variable.name}}
         }
+        {% if variable.isMutable %}
         set {
             self.{{type.name|lowerFirstWord}}.{{variable.name}} = newValue
         }
+        {% endif %}
     }
     {% endif %}
 
