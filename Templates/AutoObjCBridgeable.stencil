@@ -12,6 +12,11 @@ class _ObjC{{type.name}} : NSObject {
         self.{{type.name|lowerFirstWord}} = {{type.name|lowerFirstWord}}
     }
 
+    // Initializer to be used from ObjC code
+    {% if type.variables.count == 0 %}override {%endif%}init({% for variable in type.variables|annotated:"enableBridging" %}{% if variable.type.kind != "enum" %}{{variable.name}}: {{variable.typeName}}{%if not forloop.last %}, {%endif%}{% endif %}{% endfor %}) {
+        self.{{type.name|lowerFirstWord}} = {{type.name}}({% for variable in type.variables|annotated:"enableBridging" %}{% if variable.type.kind != "enum" %}{{variable.name}}: {{variable.name}}{%if not forloop.last %},{%endif%}{% endif %}{% endfor %})
+    }
+
     {% for variable in type.variables|annotated:"enableBridging" %}
     {% if variable.type.kind == "enum" %}
     // Computed property for enums

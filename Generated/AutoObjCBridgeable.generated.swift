@@ -14,6 +14,11 @@ class _ObjCEmptyStruct : NSObject {
         self.emptyStruct = emptyStruct
     }
 
+    // Initializer to be used from ObjC code
+    override init() {
+        self.emptyStruct = EmptyStruct()
+    }
+
 }
 
 
@@ -24,6 +29,11 @@ class _ObjCShoppingCart : NSObject {
     // Initializer to be used from Swift code
     init(shoppingCart: ShoppingCart) {
         self.shoppingCart = shoppingCart
+    }
+
+    // Initializer to be used from ObjC code
+    init(items: [String]) {
+        self.shoppingCart = ShoppingCart(items: items)
     }
 
     // Computed property for enums
@@ -62,6 +72,11 @@ class _ObjCStructWithSwiftProperties : NSObject {
     // Initializer to be used from Swift code
     init(structWithSwiftProperties: StructWithSwiftProperties) {
         self.structWithSwiftProperties = structWithSwiftProperties
+    }
+
+    // Initializer to be used from ObjC code
+    init(name: String, count: Int, valid: Bool, mutableValid: Bool, someStuff: [String]) {
+        self.structWithSwiftProperties = StructWithSwiftProperties(name: name,count: count,valid: valid,mutableValid: mutableValid,someStuff: someStuff)
     }
 
 
