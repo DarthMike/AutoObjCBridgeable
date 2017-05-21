@@ -19,6 +19,10 @@ final class SwiftReceiverAPI : NSObject {
         print(value)
     }
     
+    func sendOtherEnum(_ value: OtherEnum) {
+        print(value)
+    }
+    
     func sendShoppingCart(_ value: ShoppingCart) {
         print(value)
     }
@@ -35,7 +39,13 @@ extension SwiftReceiverAPI {
     }
     
     func sendEnum(_ value: Any) {
-       print(value)
+        if let _ = value as? _ObjCOtherEnumA {
+            sendOtherEnum(.a)
+        }
+        
+        if let value = value as? _ObjCOtherEnumB {
+            sendOtherEnum(.b(value.value1.emptyStruct))
+        }
     }
     
     func sendShoppingCart(_ value: _ObjCShoppingCart) {

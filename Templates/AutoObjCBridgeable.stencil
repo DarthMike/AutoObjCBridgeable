@@ -13,8 +13,29 @@ class _ObjC{{type.name}} : NSObject {
     }
 
     // Initializer to be used from ObjC code
-    {% if type.variables.count == 0 %}override {%endif%}init({% for variable in type.variables|annotated:"enableBridging" %}{% if variable.type.kind != "enum" %}{{variable.name}}: {{variable.typeName}}{%if not forloop.last %}, {%endif%}{% endif %}{% endfor %}) {
-        self.{{type.name|lowerFirstWord}} = {{type.name}}({% for variable in type.variables|annotated:"enableBridging" %}{% if variable.type.kind != "enum" %}{{variable.name}}: {{variable.name}}{%if not forloop.last %},{%endif%}{% endif %}{% endfor %})
+    {% if type.variables.count == 0 %}override {%endif%}
+    init({% for variable in type.variables|annotated:"enableBridging" %}
+    {% if variable.type.kind == "enum"%}
+        {{variable.name}}: Any{%if variable.isOptional %}?{%endif%}{%if not forloop.last %}, {%endif%}
+    {% else %}
+        {{variable.name}}: {{variable.typeName}}{%if not forloop.last %}, {%endif%}{% endif %}
+    {% endfor %}){
+        {% for variable in type.variables|annotated:"enableBridging" %}
+        {% if variable.type.kind == "enum" %}
+        // Unwrapping of enumeration
+        guard let enumeration{{forloop.counter}} = {{variable.name}} as? _ObjC{{variable.type.name|upperFirst}} else {
+            preconditionFailure("Type of enumeration not valid for {{variable.name}}")
+        }
+        {% endif %}
+        {% endfor %}
+        self.{{type.name|lowerFirstWord}} = {{type.name}}(
+            {% for variable in type.variables|annotated:"enableBridging" %}
+            {% if variable.type.kind == "enum" %}
+                {{variable.name}}: enumeration{{forloop.counter}}.{{variable.type.name|lowerFirstWord}}{%if not forloop.last %},{%endif%}
+            {% else %}
+                {{variable.name}}: {{variable.name}}{%if not forloop.last %},{%endif%}
+            {% endif %}
+            {% endfor %})
     }
 
     {% for variable in type.variables|annotated:"enableBridging" %}
@@ -23,9 +44,14 @@ class _ObjC{{type.name}} : NSObject {
     var {{variable.name}} : Any{% if variable.isOptional %}?{%endif%} {
         {% if variable.isMutable %}
         get {
+        {% endif %}
+            {% if variable.isOptional %}
             guard let value = self.{{type.name|lowerFirstWord}}.{{variable.name}} else {
                 return nil;
             }
+            {% else %}
+            let value = self.{{type.name|lowerFirstWord}}.{{variable.name}}
+            {% endif %}
 
             switch value {
                 {% for case in variable.type.cases %}
@@ -37,19 +63,22 @@ class _ObjC{{type.name}} : NSObject {
                 {% endif %}
                 {% endfor %}
             }
+        {% if variable.isMutable %}
         }
         {% endif %}
+        {% if variable.isMutable %}
         set {
             {% for case in variable.type.cases %}
             if let caseValue = newValue as? _ObjC{{variable.name|upperFirst}}{{case.name|upperFirst}} {
                 {% if not case.hasAssociatedValue %}
-                    self.{{type.name|lowerFirstWord}}.{{variable.name}} = .{{case.name}}
+                self.{{type.name|lowerFirstWord}}.{{variable.name}} = .{{case.name}}
                 {% else %}
                 self.{{type.name|lowerFirstWord}}.{{variable.name}} = .{{case.name}}({% for associatedValue in case.associatedValues %}{% if associatedValue.localName == nil %}caseValue.value{{forloop.counter}}{% else %}{{associatedValue.localName}}: caseValue.value{{forloop.counter}}{% endif %}{% endfor %})
                 {% endif %}
             }
             {% endfor %}
         }
+        {% endif %}
     }
     {% else %}{% if variable.type.kind == "struct" %}
     var {{variable.name}} : _ObjC{{variable.type.name}}
@@ -75,8 +104,38 @@ class _ObjC{{type.name}} : NSObject {
 {% endfor %}
 
 // Bridging of enums
+{% macro bridgeStructOrNative associatedValue caseValue %}
+{% if associatedValue.localName == nil %}
+caseValue.value{{forloop.counter}}{%if associatedValue.type.kind == "struct" %}.{{associatedValue.type.name|lowerFirstWord}}{%endif%}
+{% else %}
+{{associatedValue.localName}}: caseValue.value{{forloop.counter}}
+{% endif %}
+{% endmacro %}
+
 {% for enum in types.implementing.AutoObjCBridgeable|enum %}
+@objc(XYZ{{enum.name}})
+class _ObjC{{enum.name}} : NSObject {
+    private (set) var {{enum.name|lowerFirstWord}}: {{enum.name}}
+
+    init(caseValue: Any) {
+    {% for case in enum.cases %}
+        {%if forloop.first %}if let{%else %} else if let{%endif%} {% if case.hasAssociatedValue %}caseValue{%else%}_{%endif%} = caseValue as? _ObjC{{enum.name|upperFirst}}{{case.name|upperFirst}} {
+        {% if not case.hasAssociatedValue %}
+            self.{{enum.name|lowerFirstWord}} = .{{case.name}}
+        {% else %}
+            self.{{enum.name|lowerFirstWord}} = .{{case.name}}({% for associatedValue in case.associatedValues %}{% call bridgeStructOrNative associatedValue caseValue %}{% endfor %})
+        {% endif %}
+        }
+    {% endfor %}
+        else {
+            preconditionFailure("Value \(caseValue) is not compatible with cases of {{enum.name}}")
+        }
+    }
+}
+
+
 {% for case in enum.cases %}
+// A case of {{enum.name}}
 @objc(XYZ{{enum.name}}{{case.name|upperFirst}})
 class _ObjC{{enum.name}}{{case.name|upperFirst}} : NSObject {
     {% for associatedValue in case.associatedValues %}

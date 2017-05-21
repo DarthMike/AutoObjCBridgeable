@@ -15,8 +15,10 @@ class _ObjCEmptyStruct : NSObject {
     }
 
     // Initializer to be used from ObjC code
-    override init() {
-        self.emptyStruct = EmptyStruct()
+    override 
+    init(){
+        self.emptyStruct = EmptyStruct(
+            )
     }
 
 }
@@ -32,8 +34,30 @@ class _ObjCShoppingCart : NSObject {
     }
 
     // Initializer to be used from ObjC code
-    init(items: [String]) {
-        self.shoppingCart = ShoppingCart(items: items)
+    init(
+        items: [String], 
+        checkoutOption: Any?
+    ){
+        // Unwrapping of enumeration
+        guard let enumeration2 = checkoutOption as? _ObjCCheckoutOption else {
+            preconditionFailure("Type of enumeration not valid for checkoutOption")
+        }
+        self.shoppingCart = ShoppingCart(
+                items: items,
+                checkoutOption: enumeration2.checkoutOption
+            )
+    }
+
+
+    // Forwarding property for native types
+    var items : [String]
+    {
+        get {
+            return self.shoppingCart.items
+        }
+        set {
+            self.shoppingCart.items = newValue
+        }
     }
 
     // Computed property for enums
@@ -60,18 +84,6 @@ class _ObjCShoppingCart : NSObject {
         }
     }
 
-
-    // Forwarding property for native types
-    var items : [String]
-    {
-        get {
-            return self.shoppingCart.items
-        }
-        set {
-            self.shoppingCart.items = newValue
-        }
-    }
-
 }
 
 
@@ -85,8 +97,20 @@ class _ObjCStructWithSwiftProperties : NSObject {
     }
 
     // Initializer to be used from ObjC code
-    init(name: String, count: Int, valid: Bool, mutableValid: Bool, someStuff: [String]) {
-        self.structWithSwiftProperties = StructWithSwiftProperties(name: name,count: count,valid: valid,mutableValid: mutableValid,someStuff: someStuff)
+    init(
+        name: String, 
+        count: Int, 
+        valid: Bool, 
+        mutableValid: Bool, 
+        someStuff: [String]
+    ){
+        self.structWithSwiftProperties = StructWithSwiftProperties(
+                name: name,
+                count: count,
+                valid: valid,
+                mutableValid: mutableValid,
+                someStuff: someStuff
+            )
     }
 
 
@@ -141,6 +165,30 @@ class _ObjCStructWithSwiftProperties : NSObject {
 
 
 // Bridging of enums
+
+@objc(XYZCheckoutOption)
+class _ObjCCheckoutOption : NSObject {
+    private (set) var checkoutOption: CheckoutOption
+
+    init(caseValue: Any) {
+        if let caseValue = caseValue as? _ObjCCheckoutOptionCreditCard {
+            self.checkoutOption = .creditCard(
+given: caseValue.value1
+)
+        }
+         else if let caseValue = caseValue as? _ObjCCheckoutOptionPaypal {
+            self.checkoutOption = .paypal(
+caseValue.value1
+)
+        }
+        else {
+            preconditionFailure("Value \(caseValue) is not compatible with cases of CheckoutOption")
+        }
+    }
+}
+
+
+// A case of CheckoutOption
 @objc(XYZCheckoutOptionCreditCard)
 class _ObjCCheckoutOptionCreditCard : NSObject {
     let value1 : Int
@@ -151,6 +199,7 @@ class _ObjCCheckoutOptionCreditCard : NSObject {
     }
 }
 
+// A case of CheckoutOption
 @objc(XYZCheckoutOptionPaypal)
 class _ObjCCheckoutOptionPaypal : NSObject {
     let value1 : String
@@ -161,11 +210,33 @@ class _ObjCCheckoutOptionPaypal : NSObject {
     }
 }
 
+@objc(XYZOtherEnum)
+class _ObjCOtherEnum : NSObject {
+    private (set) var otherEnum: OtherEnum
+
+    init(caseValue: Any) {
+        if let _ = caseValue as? _ObjCOtherEnumA {
+            self.otherEnum = .a
+        }
+         else if let caseValue = caseValue as? _ObjCOtherEnumB {
+            self.otherEnum = .b(
+caseValue.value1.emptyStruct
+)
+        }
+        else {
+            preconditionFailure("Value \(caseValue) is not compatible with cases of OtherEnum")
+        }
+    }
+}
+
+
+// A case of OtherEnum
 @objc(XYZOtherEnumA)
 class _ObjCOtherEnumA : NSObject {
 
 }
 
+// A case of OtherEnum
 @objc(XYZOtherEnumB)
 class _ObjCOtherEnumB : NSObject {
     let value1 : _ObjCEmptyStruct

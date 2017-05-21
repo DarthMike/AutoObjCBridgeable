@@ -37,6 +37,12 @@
     // Instantiating enum case without associated value
     XYZOtherEnumA *caseA = [[XYZOtherEnumA alloc] init];
     [self.swiftAPI sendEnum:caseA];
+    
+    // Instantiating an enum case with associated value
+    XYZOtherEnumB *caseB = [[XYZOtherEnumB alloc] initWithValue1:[[XYZEmptyStruct alloc] init]];
+    [self.swiftAPI sendEnum:caseB];
+    
+    
 }
 
 @end
