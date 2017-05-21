@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		47608BE71ED0F40F004DC248 /* TestObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47608BE61ED0F40F004DC248 /* TestObjects.swift */; };
+		47608BEB1ED228B6004DC248 /* BridgingUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = 47608BEA1ED228B6004DC248 /* BridgingUsage.m */; };
+		47608BED1ED22D2A004DC248 /* BridgingSwiftAPIReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47608BEC1ED22D2A004DC248 /* BridgingSwiftAPIReceiver.swift */; };
 		4768CDFC1EC65A56000B82E6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768CDFB1EC65A56000B82E6 /* AppDelegate.swift */; };
 		4768CDFE1EC65A56000B82E6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768CDFD1EC65A56000B82E6 /* ViewController.swift */; };
 		4768CE011EC65A56000B82E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4768CDFF1EC65A56000B82E6 /* Main.storyboard */; };
@@ -22,6 +24,10 @@
 /* Begin PBXFileReference section */
 		07411E2D617A4BD208127766 /* Pods-ObjCBridging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObjCBridging.release.xcconfig"; path = "Pods/Target Support Files/Pods-ObjCBridging/Pods-ObjCBridging.release.xcconfig"; sourceTree = "<group>"; };
 		47608BE61ED0F40F004DC248 /* TestObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestObjects.swift; sourceTree = "<group>"; };
+		47608BE81ED228B6004DC248 /* ObjCBridging-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjCBridging-Bridging-Header.h"; sourceTree = "<group>"; };
+		47608BE91ED228B6004DC248 /* BridgingUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingUsage.h; sourceTree = "<group>"; };
+		47608BEA1ED228B6004DC248 /* BridgingUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgingUsage.m; sourceTree = "<group>"; };
+		47608BEC1ED22D2A004DC248 /* BridgingSwiftAPIReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgingSwiftAPIReceiver.swift; sourceTree = "<group>"; };
 		4768CDF81EC65A56000B82E6 /* ObjCBridging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjCBridging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4768CDFB1EC65A56000B82E6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4768CDFD1EC65A56000B82E6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +93,10 @@
 				4768CE0D1EC663FD000B82E6 /* ShoppingCart.swift */,
 				47C8B8F11EC665CF00DB6901 /* PhantomProtocols.swift */,
 				47608BE61ED0F40F004DC248 /* TestObjects.swift */,
+				47608BE91ED228B6004DC248 /* BridgingUsage.h */,
+				47608BEA1ED228B6004DC248 /* BridgingUsage.m */,
+				47608BE81ED228B6004DC248 /* ObjCBridging-Bridging-Header.h */,
+				47608BEC1ED22D2A004DC248 /* BridgingSwiftAPIReceiver.swift */,
 			);
 			path = ObjCBridging;
 			sourceTree = "<group>";
@@ -144,6 +154,7 @@
 					4768CDF71EC65A56000B82E6 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = EGDSGHXB35;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -235,9 +246,11 @@
 				476A5E8A1ECBA1B800431127 /* AutoObjCBridgeable.generated.swift in Sources */,
 				4768CDFE1EC65A56000B82E6 /* ViewController.swift in Sources */,
 				47608BE71ED0F40F004DC248 /* TestObjects.swift in Sources */,
+				47608BED1ED22D2A004DC248 /* BridgingSwiftAPIReceiver.swift in Sources */,
 				47C8B8F21EC665CF00DB6901 /* PhantomProtocols.swift in Sources */,
 				4768CE0E1EC663FD000B82E6 /* ShoppingCart.swift in Sources */,
 				4768CDFC1EC65A56000B82E6 /* AppDelegate.swift in Sources */,
+				47608BEB1ED228B6004DC248 /* BridgingUsage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,11 +374,14 @@
 			baseConfigurationReference = 721BD2B3415E4D97D165D579 /* Pods-ObjCBridging.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EGDSGHXB35;
 				INFOPLIST_FILE = ObjCBridging/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = miqu.ObjCBridging;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjCBridging/ObjCBridging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -375,11 +391,13 @@
 			baseConfigurationReference = 07411E2D617A4BD208127766 /* Pods-ObjCBridging.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EGDSGHXB35;
 				INFOPLIST_FILE = ObjCBridging/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = miqu.ObjCBridging;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjCBridging/ObjCBridging-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
