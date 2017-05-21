@@ -117,6 +117,12 @@ caseValue.value{{forloop.counter}}{%if associatedValue.type.kind == "struct" %}.
 class _ObjC{{enum.name}} : NSObject {
     private (set) var {{enum.name|lowerFirstWord}}: {{enum.name}}
 
+    // Initializer for Swift code
+    init(value: {{enum.name}}) {
+        self.{{enum.name|lowerFirstWord}} = value
+    }
+
+    // Initializer for Objective-C code
     init(caseValue: Any) {
     {% for case in enum.cases %}
         {%if forloop.first %}if let{%else %} else if let{%endif%} {% if case.hasAssociatedValue %}caseValue{%else%}_{%endif%} = caseValue as? _ObjC{{enum.name|upperFirst}}{{case.name|upperFirst}} {

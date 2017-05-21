@@ -170,6 +170,12 @@ class _ObjCStructWithSwiftProperties : NSObject {
 class _ObjCCheckoutOption : NSObject {
     private (set) var checkoutOption: CheckoutOption
 
+    // Initializer for Swift code
+    init(value: CheckoutOption) {
+        self.checkoutOption = value
+    }
+
+    // Initializer for Objective-C code
     init(caseValue: Any) {
         if let caseValue = caseValue as? _ObjCCheckoutOptionCreditCard {
             self.checkoutOption = .creditCard(
@@ -214,6 +220,12 @@ class _ObjCCheckoutOptionPaypal : NSObject {
 class _ObjCOtherEnum : NSObject {
     private (set) var otherEnum: OtherEnum
 
+    // Initializer for Swift code
+    init(value: OtherEnum) {
+        self.otherEnum = value
+    }
+
+    // Initializer for Objective-C code
     init(caseValue: Any) {
         if let _ = caseValue as? _ObjCOtherEnumA {
             self.otherEnum = .a
