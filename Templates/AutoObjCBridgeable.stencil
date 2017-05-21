@@ -20,19 +20,34 @@ class _ObjC{{type.name}} : NSObject {
     {% for variable in type.variables|annotated:"enableBridging" %}
     {% if variable.type.kind == "enum" %}
     // Computed property for enums
-    var {{variable.name}} : Any? {
-        guard let value = self.{{type.name|lowerFirstWord}}.{{variable.name}} else {
-            return nil;
-        }
+    var {{variable.name}} : Any{% if variable.isOptional %}?{%endif%} {
+        {% if variable.isMutable %}
+        get {
+            guard let value = self.{{type.name|lowerFirstWord}}.{{variable.name}} else {
+                return nil;
+            }
 
-        switch value {
+            switch value {
+                {% for case in variable.type.cases %}
+                {% if case.hasAssociatedValue %}
+                case .{{ case.name }}({%for associatedValue in case.associatedValues %}let value{{forloop.counter}}{% endfor %}):
+                    return _ObjC{{variable.type.name}}{{case.name|upperFirst}}({%for associatedValue in case.associatedValues %}value{{forloop.counter}} : value{{forloop.counter}}{%if not forloop.last %},{% endif %}{% endfor%})
+                {% else %} case .{{ case.name }}:
+                    return _ObjC{{variable.type.name}}()
+                {% endif %}
+                {% endfor %}
+            }
+        }
+        {% endif %}
+        set {
             {% for case in variable.type.cases %}
-            {% if case.hasAssociatedValue %}
-            case .{{ case.name }}({%for associatedValue in case.associatedValues %}let value{{forloop.counter}}{% endfor %}):
-                return _ObjC{{variable.type.name}}{{case.name|upperFirst}}({%for associatedValue in case.associatedValues %}value{{forloop.counter}} : value{{forloop.counter}}{%if not forloop.last %},{% endif %}{% endfor%})
-            {% else %} case .{{ case.name }}:
-                return _ObjC{{variable.type.name}}()
-            {% endif %}
+            if let caseValue = newValue as? _ObjC{{variable.name|upperFirst}}{{case.name|upperFirst}} {
+                {% if not case.hasAssociatedValue %}
+                    self.{{type.name|lowerFirstWord}}.{{variable.name}} = .{{case.name}}
+                {% else %}
+                self.{{type.name|lowerFirstWord}}.{{variable.name}} = .{{case.name}}({% for associatedValue in case.associatedValues %}{% if associatedValue.localName == nil %}caseValue.value{{forloop.counter}}{% else %}{{associatedValue.localName}}: caseValue.value{{forloop.counter}}{% endif %}{% endfor %})
+                {% endif %}
+            }
             {% endfor %}
         }
     }

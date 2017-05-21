@@ -38,15 +38,25 @@ class _ObjCShoppingCart : NSObject {
 
     // Computed property for enums
     var checkoutOption : Any? {
-        guard let value = self.shoppingCart.checkoutOption else {
-            return nil;
-        }
+        get {
+            guard let value = self.shoppingCart.checkoutOption else {
+                return nil;
+            }
 
-        switch value {
-            case .creditCard(let value1):
-                return _ObjCCheckoutOptionCreditCard(value1 : value1)
-            case .paypal(let value1):
-                return _ObjCCheckoutOptionPaypal(value1 : value1)
+            switch value {
+                case .creditCard(let value1):
+                    return _ObjCCheckoutOptionCreditCard(value1 : value1)
+                case .paypal(let value1):
+                    return _ObjCCheckoutOptionPaypal(value1 : value1)
+            }
+        }
+        set {
+            if let caseValue = newValue as? _ObjCCheckoutOptionCreditCard {
+                self.shoppingCart.checkoutOption = .creditCard(given: caseValue.value1)
+            }
+            if let caseValue = newValue as? _ObjCCheckoutOptionPaypal {
+                self.shoppingCart.checkoutOption = .paypal(caseValue.value1)
+            }
         }
     }
 
