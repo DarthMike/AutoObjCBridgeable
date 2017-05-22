@@ -14,13 +14,13 @@ class _ObjC{{type.name}} : NSObject {
 
     // Initializer to be used from ObjC code
     {% if type.variables.count == 0 %}override {%endif%}
-    init({% for variable in type.variables|annotated:"enableBridging" %}
+    init({% for variable in type.variables %}
     {% if variable.type.kind == "enum"%}
         {{variable.name}}: Any{%if variable.isOptional %}?{%endif%}{%if not forloop.last %}, {%endif%}
     {% else %}
         {{variable.name}}: {{variable.typeName}}{%if not forloop.last %}, {%endif%}{% endif %}
     {% endfor %}){
-        {% for variable in type.variables|annotated:"enableBridging" %}
+        {% for variable in type.variables %}
         {% if variable.type.kind == "enum" %}
         // Unwrapping of enumeration
         guard let enumeration{{forloop.counter}} = {{variable.name}} as? _ObjC{{variable.type.name|upperFirst}} else {
@@ -29,7 +29,7 @@ class _ObjC{{type.name}} : NSObject {
         {% endif %}
         {% endfor %}
         self.{{type.name|lowerFirstWord}} = {{type.name}}(
-            {% for variable in type.variables|annotated:"enableBridging" %}
+            {% for variable in type.variables %}
             {% if variable.type.kind == "enum" %}
                 {{variable.name}}: enumeration{{forloop.counter}}.{{variable.type.name|lowerFirstWord}}{%if not forloop.last %},{%endif%}
             {% else %}
@@ -38,7 +38,7 @@ class _ObjC{{type.name}} : NSObject {
             {% endfor %})
     }
 
-    {% for variable in type.variables|annotated:"enableBridging" %}
+    {% for variable in type.variables %}
     {% if variable.type.kind == "enum" %}
     // Computed property for enums
     var {{variable.name}} : Any{% if variable.isOptional %}?{%endif%} {

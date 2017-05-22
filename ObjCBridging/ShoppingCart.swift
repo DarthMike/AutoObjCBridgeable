@@ -12,9 +12,7 @@ enum CheckoutOption {
 }
 
 struct ShoppingCart  {
-    // sourcery:enableBridging
     var items: [String]
-    // sourcery:enableBridging
     var checkoutOption: CheckoutOption?
 
     init(items: [String], checkoutOption: CheckoutOption? = nil) {
