@@ -49,6 +49,7 @@ class _ObjCShoppingCart : NSObject {
     }
 
 
+
     // Forwarding property for native types
     var items : [String]
     {
@@ -84,6 +85,42 @@ class _ObjCShoppingCart : NSObject {
         }
     }
 
+
+
+}
+
+
+@objc(XYZStructWithOtherStructs)
+class _ObjCStructWithOtherStructs : NSObject {
+    private (set) var structWithOtherStructs: StructWithOtherStructs
+
+    // Initializer to be used from Swift code
+    init(structWithOtherStructs: StructWithOtherStructs) {
+        self.structWithOtherStructs = structWithOtherStructs
+    }
+
+    // Initializer to be used from ObjC code
+    init(
+        contained: EmptyStruct
+    ){
+        self.structWithOtherStructs = StructWithOtherStructs(
+                contained: contained
+            )
+    }
+
+
+    var contained : _ObjCEmptyStruct {
+        get {
+            let value = self.structWithOtherStructs.contained
+            return _ObjCEmptyStruct(emptyStruct: value)
+        }
+
+        set {
+            self.structWithOtherStructs.contained = newValue.emptyStruct
+        }
+    }
+
+
 }
 
 
@@ -114,6 +151,7 @@ class _ObjCStructWithSwiftProperties : NSObject {
     }
 
 
+
     // Forwarding property for native types
     var name : String
     {
@@ -121,6 +159,7 @@ class _ObjCStructWithSwiftProperties : NSObject {
             return self.structWithSwiftProperties.name
         }
     }
+
 
 
     // Forwarding property for native types
@@ -132,6 +171,7 @@ class _ObjCStructWithSwiftProperties : NSObject {
     }
 
 
+
     // Forwarding property for native types
     var valid : Bool
     {
@@ -139,6 +179,7 @@ class _ObjCStructWithSwiftProperties : NSObject {
             return self.structWithSwiftProperties.valid
         }
     }
+
 
 
     // Forwarding property for native types
@@ -151,6 +192,7 @@ class _ObjCStructWithSwiftProperties : NSObject {
             self.structWithSwiftProperties.mutableValid = newValue
         }
     }
+
 
 
     // Forwarding property for native types

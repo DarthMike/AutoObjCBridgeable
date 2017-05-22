@@ -80,10 +80,34 @@ class _ObjC{{type.name}} : NSObject {
         }
         {% endif %}
     }
-    {% else %}{% if variable.type.kind == "struct" %}
-    var {{variable.name}} : _ObjC{{variable.type.name}}
     {% endif %}
 
+    {% if variable.type.kind == "struct" %}
+    var {{variable.name}} : _ObjC{{variable.type.name}} {
+        {% if variable.isMutable %}
+        get {
+        {% endif %}
+        {% if variable.isOptional %}
+            guard let value = self.{{type.name|lowerFirstWord}}.{{variable.name}} else {
+                return nil;
+            }
+        {% else %}
+            let value = self.{{type.name|lowerFirstWord}}.{{variable.name}}
+        {% endif %}
+            return _ObjC{{variable.type.name}}({{variable.type.name|lowerFirstWord}}: value)
+        {% if variable.isMutable %}
+        }
+        {% endif %}
+
+        {% if variable.isMutable %}
+        set {
+            self.{{type.name|lowerFirstWord}}.{{variable.name}} = newValue.{{variable.type.name|lowerFirstWord}}
+        }
+        {% endif %}
+    }
+    {% endif %}
+
+    {% if variable.type.kind != "struct" and variable.type.kind != "enum" %}
     // Forwarding property for native types
     var {{variable.name}} : {{variable.typeName}}
     {

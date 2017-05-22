@@ -25,6 +25,11 @@ struct StructWithSwiftProperties : AutoObjCBridgeable {
     let someStuff: [String]
 }
 
+struct StructWithOtherStructs : AutoObjCBridgeable {
+    // sourcery:enableBridging
+    var contained: EmptyStruct
+}
+
 enum OtherEnum : AutoObjCBridgeable {
     case a
     case b(EmptyStruct)
