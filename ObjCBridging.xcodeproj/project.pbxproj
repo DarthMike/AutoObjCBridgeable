@@ -18,6 +18,7 @@
 		4768CE0E1EC663FD000B82E6 /* ShoppingCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4768CE0D1EC663FD000B82E6 /* ShoppingCart.swift */; };
 		476A5E8A1ECBA1B800431127 /* AutoObjCBridgeable.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476A5E891ECBA1B800431127 /* AutoObjCBridgeable.generated.swift */; };
 		47C8B8F21EC665CF00DB6901 /* PhantomProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C8B8F11EC665CF00DB6901 /* PhantomProtocols.swift */; };
+		47F429A51ED38FE700AAEB3B /* AutoObjCAPIBridgeable.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F429A41ED38FE700AAEB3B /* AutoObjCAPIBridgeable.generated.swift */; };
 		E7AD320A3DD559E1DF8573C8 /* Pods_ObjCBridging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B55E769DF25CD7196479E6E3 /* Pods_ObjCBridging.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		4768CE0D1EC663FD000B82E6 /* ShoppingCart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingCart.swift; sourceTree = "<group>"; };
 		476A5E891ECBA1B800431127 /* AutoObjCBridgeable.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoObjCBridgeable.generated.swift; path = Generated/AutoObjCBridgeable.generated.swift; sourceTree = "<group>"; };
 		47C8B8F11EC665CF00DB6901 /* PhantomProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhantomProtocols.swift; sourceTree = "<group>"; };
+		47F429A41ED38FE700AAEB3B /* AutoObjCAPIBridgeable.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoObjCAPIBridgeable.generated.swift; path = Generated/AutoObjCAPIBridgeable.generated.swift; sourceTree = "<group>"; };
 		721BD2B3415E4D97D165D579 /* Pods-ObjCBridging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ObjCBridging.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ObjCBridging/Pods-ObjCBridging.debug.xcconfig"; sourceTree = "<group>"; };
 		B55E769DF25CD7196479E6E3 /* Pods_ObjCBridging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ObjCBridging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 		47C8B8FB1EC6678800DB6901 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
+				47F429A41ED38FE700AAEB3B /* AutoObjCAPIBridgeable.generated.swift */,
 				476A5E891ECBA1B800431127 /* AutoObjCBridgeable.generated.swift */,
 			);
 			name = Generated;
@@ -243,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47F429A51ED38FE700AAEB3B /* AutoObjCAPIBridgeable.generated.swift in Sources */,
 				476A5E8A1ECBA1B800431127 /* AutoObjCBridgeable.generated.swift in Sources */,
 				4768CDFE1EC65A56000B82E6 /* ViewController.swift in Sources */,
 				47608BE71ED0F40F004DC248 /* TestObjects.swift in Sources */,

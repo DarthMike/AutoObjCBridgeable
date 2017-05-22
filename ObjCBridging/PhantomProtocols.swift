@@ -7,3 +7,4 @@
 //
 
 protocol AutoObjCBridgeable {}
+protocol AutoObjCAPIBridgeable {}

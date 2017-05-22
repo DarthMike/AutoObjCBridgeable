@@ -1,0 +1,21 @@
+
+{% for type in types.implementing.AutoObjCAPIBridgeable %}
+
+extension {{type.name}} {
+    {% for method in type.methods|annotated:"EnableBridging"%}
+    func {{method.callName}} (
+        {% for parameter in method.parameters %}
+        {% if parameter.type.implements.AutoObjCAPIBridgeable %}
+        a
+        {% else %}
+        {{parameter.argumentLabel}} {{parameter.name}}: {{parameter.typeName}}
+        {% endif %}
+        {% endfor %}
+    )  () {
+
+    }
+    {% endfor %}
+}
+
+
+{% endfor %}

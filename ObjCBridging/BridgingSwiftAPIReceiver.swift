@@ -10,7 +10,7 @@ import Foundation
 
 @objc(XYZSwiftReceiverAPI)
 final class SwiftReceiverAPI : NSObject {
-    
+    // sourcery: EnableBridging
     func sendEmptyStruct(_ value: EmptyStruct) {
         print(value)
     }
@@ -38,17 +38,13 @@ extension SwiftReceiverAPI {
         sendStruct(value.structWithSwiftProperties)
     }
     
-    func sendEnum(_ value: Any) {
-        if let _ = value as? _ObjCOtherEnumA {
-            sendOtherEnum(.a)
-        }
-        
-        if let value = value as? _ObjCOtherEnumB {
-            sendOtherEnum(.b(value.value1.emptyStruct))
-        }
+    func sendEnum(_ value: _ObjCOtherEnum) {
+        sendOtherEnum(value.otherEnum)
     }
     
     func sendShoppingCart(_ value: _ObjCShoppingCart) {
         print(value)
     }
 }
+
+extension SwiftReceiverAPI : AutoObjCAPIBridgeable {}
