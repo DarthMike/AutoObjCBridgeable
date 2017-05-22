@@ -38,14 +38,8 @@ extension SwiftReceiverAPI {
         sendStruct(value.structWithSwiftProperties)
     }
     
-    func sendEnum(_ value: Any) {
-        if let _ = value as? _ObjCOtherEnumA {
-            sendOtherEnum(.a)
-        }
-        
-        if let value = value as? _ObjCOtherEnumB {
-            sendOtherEnum(.b(value.value1.emptyStruct))
-        }
+    func sendOtherEnum(_ value: _ObjCOtherEnum) {
+        sendOtherEnum(value.otherEnum)
     }
     
     func sendShoppingCart(_ value: _ObjCShoppingCart) {
